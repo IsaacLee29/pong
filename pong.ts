@@ -287,10 +287,10 @@ function pong() {
                 overlappingIntervals(ballYInterval)(rectYInterval);
       },
       
-      collideTopCanvas = wallCollision((y1: number, y2: number)=>y1 < y2)(ballYInterval)(canvasYInterval),
-      collideBottomCanvas = wallCollision((y1: number, y2: number)=>!(y1 < y2))(ballYInterval)(canvasYInterval),
-      collideLeftCanvas = wallCollision((x1: number, x2: number)=>x1 < x2)(ballXInterval)(canvasXInterval),
-      collideRightCanvas = wallCollision((x1: number, x2: number)=>!(x1 < x2))(ballXInterval)(canvasXInterval),
+      collideTopCanvas = wallCollision((y1: number, y2: number)=> y1 < y2)(ballYInterval)(canvasYInterval),
+      collideBottomCanvas = wallCollision((y1: number, y2: number)=> y1 >= y2)(ballYInterval)(canvasYInterval),
+      collideLeftCanvas = wallCollision((x1: number, x2: number)=> x1 < x2)(ballXInterval)(canvasXInterval),
+      collideRightCanvas = wallCollision((x1: number, x2: number)=> x1 >= x2)(ballXInterval)(canvasXInterval),
       userCollision = paddleCollision(s.rightPaddle),
       oppCollision = paddleCollision(s.leftPaddle);
     
