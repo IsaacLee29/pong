@@ -1,16 +1,11 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
-        <style>
-            @import url(style.css);
-            p.highlight {
-                color: red;
-            }
-            svg {
-                background-color: rgb(41, 41, 36);
-            }
-        </style>
+        <title>Pong</title>
+        <link href="style.css" type="text/css" rel="stylesheet">
         <script src="./dist/pong.js"></script>
     </head>
+    
     <body>
         <h1>Pong</h1>
         <h2>Press key w to move up</h2>
@@ -18,10 +13,6 @@
         <h2>You are controlling the right paddle</h2>
         <h2>First to 7 wins the game</h2>
         <svg id="canvas" width="600" height="600">
-            <style>
-                .score { font: 50px arial; fill: white; }
-            </style>
-
             <text id="oppScore" x="140" y="70" class="score">0</text>
             <text id="userScore" x="440" y="70" class="score">0</text>
 
