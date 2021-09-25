@@ -1,25 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Pong</title>
-        <link href="style.css" type="text/css" rel="stylesheet">
-        <script src="./dist/pong.js"></script>
-    </head>
-    
-    <body>
-        <h1>Pong</h1>
-        <h2>Press key w to move up</h2>
-        <h2>Press key s to move down</h2>
-        <h2>You are controlling the right paddle</h2>
-        <h2>First to 7 wins the game</h2>
-        <svg id="canvas" width="600" height="600">
-            <text id="oppScore" x="140" y="70" class="score">0</text>
-            <text id="userScore" x="440" y="70" class="score">0</text>
+  <head>
+    <title>Pong</title>
+    <link href="style.css" type="text/css" rel="stylesheet" />
+    <script src="./dist/pong.js"></script>
+  </head>
 
-            <line x1="300" y1="0" x2="300" y2="600" stroke="white" stroke-dasharray="5,5"/>
-            <rect id="rightPaddle" x="580" y="260" width="10" height="80" fill="white"/>
-            <rect id="leftPaddle" x="10" y="260" width="10" height="80" fill="white"/> 
-        </svg>
+  <body>
+    <h1>Pong</h1>
+    <h2>Press key w to move up</h2>
+    <h2>Press key s to move down</h2>
+    <h2>You are controlling the right paddle</h2>
+    <h2>First to 7 wins the game</h2>
+    <svg id="canvas" width="600" height="600">
+      <text id="oppScore" x="140" y="70" class="score">0</text>
+      <text id="userScore" x="440" y="70" class="score">0</text>
 
-    </body>
+      <line
+        x1="300"
+        y1="0"
+        x2="300"
+        y2="600"
+        stroke="white"
+        stroke-dasharray="5,5"
+      />
+      <rect
+        id="rightPaddle"
+        x="580"
+        y="260"
+        width="10"
+        height="80"
+        fill="white"
+      />
+      <rect
+        id="leftPaddle"
+        x="10"
+        y="260"
+        width="10"
+        height="80"
+        fill="white"
+      />
+    </svg>
+  </body>
 </html>

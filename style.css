@@ -1,18 +1,24 @@
-BODY, H2, H3, H4, H5, H6, TH, TD {
-font-family: arial, helvetica, sans-serif;
+BODY,
+H2,
+H3,
+H4,
+H5,
+H6,
+TH,
+TD {
+  font-family: arial, helvetica, sans-serif;
 }
 
 H1 {
-    font-size: 38px;
-    font-family: arial, helvetica, sans-serif;
-}
-
-p.highlight {
-    color: red;
+  font-size: 38px;
+  font-family: arial, helvetica, sans-serif;
 }
 
 svg {
-    background-color: rgb(41, 41, 36);
+  background-color: rgb(41, 41, 36);
 }
 
-.score { font: 50px arial; fill: white; }
+.score {
+  font: 50px arial;
+  fill: white;
+}
