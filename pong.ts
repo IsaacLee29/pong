@@ -110,7 +110,9 @@ function pong() {
   /**
    * This class is used to identify events pushed from Observables to move the ball.
    */
-  class BallMovement { constructor() {} }
+  class BallMovement { constructor() {
+    // This comment is to surpress SonarLint issue
+  } }
 
   /**
    * This class is used to identify events pushed from Observables to move the paddle.
@@ -120,7 +122,9 @@ function pong() {
   /**
    * This class is used to identify events pushed from Observables to move the computer controlled paddle.
    */
-  class CompPaddleMovement { constructor() {} }
+  class CompPaddleMovement { constructor() {
+    // This comment is to surpress SonarLint issue
+  } }
 
   /**
    * This function is used to set the attributes of Elements in the canvas based on a certain set of
