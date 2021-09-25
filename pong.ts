@@ -237,15 +237,17 @@ function pong() {
    * new objects with updated values, preventing nasty side-effects.
    */
   function reduceState(acc: GameState, m: BallMovement | PaddleMovement | CompPaddleMovement) {
-    return m instanceof PaddleMovement ? 
-            {...acc,
-              rightPaddle: reducePaddleState(acc.rightPaddle)(m)
-            } : 
-          m instanceof CompPaddleMovement ? 
-            reduceAiPaddleState(acc) : 
-          m instanceof BallMovement ? 
-            handleBallCollisions(acc) :
-            {...acc}
+    if (m instanceof PaddleMovement) {
+      return {...acc,
+        rightPaddle: reducePaddleState(acc.rightPaddle)(m)
+      };
+    } else if (m instanceof CompPaddleMovement) {
+      return reduceAiPaddleState(acc);
+    } else if (m instanceof BallMovement) {
+      return handleBallCollisions(acc);
+    } else {
+      return {...acc};
+    }
   }
 
   /**
