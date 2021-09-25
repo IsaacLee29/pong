@@ -110,7 +110,9 @@ function pong() {
   /**
    * This class is used to identify events pushed from Observables to move the ball.
    */
-  class BallMovement { constructor() {} }
+  class BallMovement { constructor() {
+    // This comment is to surpress SonarLint issue
+  } }
 
   /**
    * This class is used to identify events pushed from Observables to move the paddle.
@@ -120,7 +122,9 @@ function pong() {
   /**
    * This class is used to identify events pushed from Observables to move the computer controlled paddle.
    */
-  class CompPaddleMovement { constructor() {} }
+  class CompPaddleMovement { constructor() {
+    // This comment is to surpress SonarLint issue
+  } }
 
   /**
    * This function is used to set the attributes of Elements in the canvas based on a certain set of
@@ -237,15 +241,17 @@ function pong() {
    * new objects with updated values, preventing nasty side-effects.
    */
   function reduceState(acc: GameState, m: BallMovement | PaddleMovement | CompPaddleMovement) {
-    return m instanceof PaddleMovement ? 
-            {...acc,
-              rightPaddle: reducePaddleState(acc.rightPaddle)(m)
-            } : 
-          m instanceof CompPaddleMovement ? 
-            reduceAiPaddleState(acc) : 
-          m instanceof BallMovement ? 
-            handleBallCollisions(acc) :
-            {...acc}
+    if (m instanceof PaddleMovement) {
+      return {...acc,
+        rightPaddle: reducePaddleState(acc.rightPaddle)(m)
+      };
+    } else if (m instanceof CompPaddleMovement) {
+      return reduceAiPaddleState(acc);
+    } else if (m instanceof BallMovement) {
+      return handleBallCollisions(acc);
+    } else {
+      return {...acc};
+    }
   }
 
   /**
@@ -285,10 +291,10 @@ function pong() {
                 overlappingIntervals(ballYInterval)(rectYInterval);
       },
       
-      collideTopCanvas = wallCollision((y1: number, y2: number)=>y1 < y2)(ballYInterval)(canvasYInterval),
-      collideBottomCanvas = wallCollision((y1: number, y2: number)=>!(y1 < y2))(ballYInterval)(canvasYInterval),
-      collideLeftCanvas = wallCollision((x1: number, x2: number)=>x1 < x2)(ballXInterval)(canvasXInterval),
-      collideRightCanvas = wallCollision((x1: number, x2: number)=>!(x1 < x2))(ballXInterval)(canvasXInterval),
+      collideTopCanvas = wallCollision((y1: number, y2: number)=> y1 < y2)(ballYInterval)(canvasYInterval),
+      collideBottomCanvas = wallCollision((y1: number, y2: number)=> y1 >= y2)(ballYInterval)(canvasYInterval),
+      collideLeftCanvas = wallCollision((x1: number, x2: number)=> x1 < x2)(ballXInterval)(canvasXInterval),
+      collideRightCanvas = wallCollision((x1: number, x2: number)=> x1 >= x2)(ballXInterval)(canvasXInterval),
       userCollision = paddleCollision(s.rightPaddle),
       oppCollision = paddleCollision(s.leftPaddle);
     
@@ -353,38 +359,44 @@ function pong() {
        * This function is used to determine the final position of the ball.
        * This function makes use of lazy evaluation, i.e. compute the return values upon pull.
        */
-      newPosition = (): Vector => 
-        topOrBottomCanvasCollision ? 
-          move(invertY)(s.ball.position)(s.ball.velocity) : 
-        leftOrRightPaddleCollision ?
-          move(v => v)(s.ball.position)(calculateVelocity) :
-          move(v => v)(s.ball.position)(s.ball.velocity),
+      newPosition = (): Vector => {
+        if (topOrBottomCanvasCollision) {
+          return move(invertY)(s.ball.position)(s.ball.velocity);
+        } else if (leftOrRightPaddleCollision) {
+          return move(v => v)(s.ball.position)(calculateVelocity);
+        } else {
+          return move(v => v)(s.ball.position)(s.ball.velocity);
+        }
+      },
       
       /**
        * This function is used to determine the final velocity of the ball.
        * This function makes use of lazy evaluation, i.e. compute the return values upon pull.
        */
-      newVelocity = (): Vector => 
-        topOrBottomCanvasCollision ? 
-          invertY(s.ball.velocity) : 
-        leftOrRightPaddleCollision ? 
-          calculateVelocity :
-          s.ball.velocity,
+      newVelocity = (): Vector => {
+        if (topOrBottomCanvasCollision) {
+          return invertY(s.ball.velocity);
+        } else if (leftOrRightPaddleCollision) {
+          return calculateVelocity;
+        } else {
+          return s.ball.velocity;
+        }
+      },
       
       /**
        * This function is used to update the current game score.
        * This is an impure function due to the random number generator used, i.e. the returned value
        * may not be the same always for a similar given input.
        */
-      reduceScore = (s: GameState) => {
+      reduceScore = (gs: GameState) => {
         const
-          userScore: number = s.userScore,
-          oppScore: number = s.oppScore,
+          userScore: number = gs.userScore,
+          oppScore: number = gs.oppScore,
           
           /**
            * This is a pure function used to determine if the game is over.
            */
-          gameOver = () => s.userScore === FINAL_SCORE || s.oppScore === FINAL_SCORE,
+          gameOver = () => gs.userScore === FINAL_SCORE || gs.oppScore === FINAL_SCORE,
 
           /**
            * This function is used to reset the paddle's position after scoring.
@@ -392,28 +404,28 @@ function pong() {
           resetPaddlePositionAfterScoring = (p: Paddle) => (d: Vector) => 
                                             leftOrRightCanvasCollision ? d : p.position;
     
-        return <GameState>{...s,
-          rightPaddle: {...s.rightPaddle,
-            position: resetPaddlePositionAfterScoring(s.rightPaddle)(RIGHT_PADDLE_START_POSITION)
+        return <GameState>{...gs,
+          rightPaddle: {...gs.rightPaddle,
+            position: resetPaddlePositionAfterScoring(gs.rightPaddle)(RIGHT_PADDLE_START_POSITION)
           },
-          leftPaddle: {...s.leftPaddle,
-            position:  resetPaddlePositionAfterScoring(s.leftPaddle)(LEFT_PADDLE_START_POSITION)
+          leftPaddle: {...gs.leftPaddle,
+            position:  resetPaddlePositionAfterScoring(gs.leftPaddle)(LEFT_PADDLE_START_POSITION)
           },
-          ball: {...s.ball,
+          ball: {...gs.ball,
             position: leftOrRightCanvasCollision ? 
                         new Vector(CANVAS_WIDTH / 2, (CANVAS_HEIGHT / 2)) :  // restart from middle
-                        s.ball.position,
+                        gs.ball.position,
             velocity: collideLeftCanvas ? 
                         new Vector(-DEFAULT_BALL_VELOCITY.x, 
                           generatePositiveOrNegativeOne() * DEFAULT_BALL_VELOCITY.y) :
                       collideRightCanvas ?
                         new Vector(DEFAULT_BALL_VELOCITY.x, 
                           generatePositiveOrNegativeOne() * DEFAULT_BALL_VELOCITY.y) :
-                        s.ball.velocity
+                        gs.ball.velocity
           },
           userScore: collideLeftCanvas ? userScore + 1 : userScore,
           oppScore: collideRightCanvas ? oppScore + 1 : oppScore,
-          gameOver: gameOver() ? true : s.gameOver
+          gameOver: gameOver() ? true : gs.gameOver
         }
       }
     return reduceScore(<GameState>{...s,
