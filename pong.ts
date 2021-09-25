@@ -369,12 +369,15 @@ function pong() {
        * This function is used to determine the final velocity of the ball.
        * This function makes use of lazy evaluation, i.e. compute the return values upon pull.
        */
-      newVelocity = (): Vector => 
-        topOrBottomCanvasCollision ? 
-          invertY(s.ball.velocity) : 
-        leftOrRightPaddleCollision ? 
-          calculateVelocity :
-          s.ball.velocity,
+      newVelocity = (): Vector => {
+        if (topOrBottomCanvasCollision) {
+          return invertY(s.ball.velocity);
+        } else if (leftOrRightPaddleCollision) {
+          return calculateVelocity;
+        } else {
+          return s.ball.velocity;
+        }
+      },
       
       /**
        * This function is used to update the current game score.
