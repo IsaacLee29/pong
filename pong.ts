@@ -384,15 +384,15 @@ function pong() {
        * This is an impure function due to the random number generator used, i.e. the returned value
        * may not be the same always for a similar given input.
        */
-      reduceScore = (s: GameState) => {
+      reduceScore = (gs: GameState) => {
         const
-          userScore: number = s.userScore,
-          oppScore: number = s.oppScore,
+          userScore: number = gs.userScore,
+          oppScore: number = gs.oppScore,
           
           /**
            * This is a pure function used to determine if the game is over.
            */
-          gameOver = () => s.userScore === FINAL_SCORE || s.oppScore === FINAL_SCORE,
+          gameOver = () => gs.userScore === FINAL_SCORE || gs.oppScore === FINAL_SCORE,
 
           /**
            * This function is used to reset the paddle's position after scoring.
@@ -400,28 +400,28 @@ function pong() {
           resetPaddlePositionAfterScoring = (p: Paddle) => (d: Vector) => 
                                             leftOrRightCanvasCollision ? d : p.position;
     
-        return <GameState>{...s,
-          rightPaddle: {...s.rightPaddle,
-            position: resetPaddlePositionAfterScoring(s.rightPaddle)(RIGHT_PADDLE_START_POSITION)
+        return <GameState>{...gs,
+          rightPaddle: {...gs.rightPaddle,
+            position: resetPaddlePositionAfterScoring(gs.rightPaddle)(RIGHT_PADDLE_START_POSITION)
           },
-          leftPaddle: {...s.leftPaddle,
-            position:  resetPaddlePositionAfterScoring(s.leftPaddle)(LEFT_PADDLE_START_POSITION)
+          leftPaddle: {...gs.leftPaddle,
+            position:  resetPaddlePositionAfterScoring(gs.leftPaddle)(LEFT_PADDLE_START_POSITION)
           },
-          ball: {...s.ball,
+          ball: {...gs.ball,
             position: leftOrRightCanvasCollision ? 
                         new Vector(CANVAS_WIDTH / 2, (CANVAS_HEIGHT / 2)) :  // restart from middle
-                        s.ball.position,
+                        gs.ball.position,
             velocity: collideLeftCanvas ? 
                         new Vector(-DEFAULT_BALL_VELOCITY.x, 
                           generatePositiveOrNegativeOne() * DEFAULT_BALL_VELOCITY.y) :
                       collideRightCanvas ?
                         new Vector(DEFAULT_BALL_VELOCITY.x, 
                           generatePositiveOrNegativeOne() * DEFAULT_BALL_VELOCITY.y) :
-                        s.ball.velocity
+                        gs.ball.velocity
           },
           userScore: collideLeftCanvas ? userScore + 1 : userScore,
           oppScore: collideRightCanvas ? oppScore + 1 : oppScore,
-          gameOver: gameOver() ? true : s.gameOver
+          gameOver: gameOver() ? true : gs.gameOver
         }
       }
     return reduceScore(<GameState>{...s,
